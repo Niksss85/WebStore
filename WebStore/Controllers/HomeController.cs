@@ -15,7 +15,7 @@ namespace WebStore.Controllers
             new Employee { Id = 3, LastName = "Сидоров", FirstName = "Сидор", Patronymic = "Сидорович", Age = 27 },
         };
 
-        public IActionResult Index() => View("SecondView");
+        public IActionResult Index() => View(/*"SecondView"*/);
 
         public IActionResult SecondAction()
         {
