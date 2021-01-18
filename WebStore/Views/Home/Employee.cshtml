@@ -1,0 +1,44 @@
+﻿
+@model WebStore.Models.Employee
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Employee card</title>
+</head>
+<body>
+
+    <h3>Employee card</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Patronomyc</th>
+                <th>Age</th>
+                <th>BirthDate</th>
+                <th>Date of employment</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.Id</td>
+                <td>@Model.LastName</td>
+                <td>@Model.FirstName</td>
+                <td>@Model.Patronymic</td>
+                <td>@Model.Age</td>
+                <td>@Model.BirthDate</td>
+                <td>@Model.DateFrom</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+    <a href="~/Home/Employees">Employees</a>
+
+</body>
+</html>
