@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Infrastructure.Middleware;
 
 namespace WebStore
 {
@@ -13,7 +14,9 @@ namespace WebStore
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddMvc();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services
+                .AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -27,6 +30,14 @@ namespace WebStore
                                   //в браузер
             app.UseRouting(); //извлечение информации о маршрутах
 
+            app.UseWelcomePage("/welcome");//промеж. по
+
+            app.UseMiddleware<TestMiddleware>();//регистрация пром. по
+            app.MapWhen(
+                context => context.Request.Query.ContainsKey("id") && context.Request.Query["id"] == "5",
+                context => context.Run(async request => await request.Response.WriteAsync("Hello id 5")));
+
+            app.Map("/hello", context=>context.Run(async request => await request.Response.WriteAsync("Hello!!")));
             app.UseEndpoints(endpoints => //срабатывает маршрут
             {
                 endpoints.MapGet("/greetings", async context =>
