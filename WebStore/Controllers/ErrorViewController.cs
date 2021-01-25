@@ -7,13 +7,13 @@ using WebStore.Models;
 
 namespace WebStore.Controllers
 {
-    public class HomeController : Controller
+    public class ErrorViewController : Controller
     {
 
 
         public IActionResult Index() => View();
 
-     //   public IActionResult Test() => Content("Test");
+
 
     }
 }
