@@ -61,10 +61,40 @@ namespace WebStore.Controllers
                 BirthDate = model.BirthDate,
                 DateFrom = model.DateFrom
             };
-            _EmployeesData.Update(employee);
+            if (employee.Id == 0)
+                _EmployeesData.Add(employee);
+            else 
+                _EmployeesData.Update(employee);
             return RedirectToAction("Index");
 
         }
         #endregion
+        #region Delete
+        public IActionResult Delete(int id)
+        {
+            if (id <= 0) return BadRequest();
+            var employee = _EmployeesData.Get(id);
+            if (employee is null)
+                return NotFound();
+            return View(new EmployeeViewModel
+            {
+                Id = employee.Id,
+                LastName = employee.LastName,
+                Name = employee.FirstName,
+                MiddleName = employee.Patronymic,
+                Age = employee.Age,
+                BirthDate = employee.BirthDate,
+                DateFrom = employee.DateFrom
+            });
+        }
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            _EmployeesData.Delete(id);
+            return RedirectToAction("Index");
+        }
+
+        #endregion
+        public IActionResult Create() => View("Edit", new EmployeeViewModel());
     }
-    }
+}
