@@ -13,7 +13,7 @@ namespace WebStore.Controllers
 
         public IActionResult Index() => View();
 
-
+     //   public IActionResult Test() => Content("Test");
 
     }
 }

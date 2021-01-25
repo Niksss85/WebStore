@@ -27,6 +27,7 @@ namespace WebStore
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage(); //обработка исключений
+                app.UseBrowserLink();
             }
 
             app.UseStaticFiles(); //проверка на запрос файла -> файл отправляется
