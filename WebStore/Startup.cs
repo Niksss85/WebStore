@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Middleware;
+using WebStore.Infrastructure.Services;
 using WebStore.Services;
 
 namespace WebStore
@@ -15,7 +16,10 @@ namespace WebStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMvc();
+            services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
+            services.AddTransient<IProductData, InMemoryProductData>();
+
+
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             services
                 .AddControllersWithViews()
