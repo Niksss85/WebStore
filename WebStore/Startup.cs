@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Data;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Middleware;
 using WebStore.Infrastructure.Services;
-using WebStore.Services;
+using WebStore.Infrastructure.Services.InMemory;
+using WebStore.Infrastructure.Services.InSQL;
+using WebStoreDAL.Context;
 
 namespace WebStore
 {
@@ -16,8 +20,11 @@ namespace WebStore
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddTransient<WebStoreDbInitializer>();
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
-            services.AddTransient<IProductData, InMemoryProductData>();
+            //services.AddTransient<IProductData, InMemoryProductData>();
+            services.AddTransient<IProductData,SqlProductData>();
 
 
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
@@ -26,8 +33,9 @@ namespace WebStore
                 .AddRazorRuntimeCompilation();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db)
         {
+            db.Initialize();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage(); //обработка исключений
