@@ -10,7 +10,7 @@ namespace WebStoreDAL.Context
     {
         public DbSet<Product> Products { get; set; } // добавление таблиц
         public DbSet<Brand> Brands { get; set; }
-        public DbSet<Section> Section { get; set; }
+        public DbSet<Section> Sections { get; set; }
         public WebStoreDB(DbContextOptions<WebStoreDB> options) :base(options){ }
 
     }
