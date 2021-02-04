@@ -19,6 +19,7 @@ namespace WebStore.Controllers
             _UserManager = UserManger;
             _SignInManager = SignInManager;
         }
+        #region Register
         //отправка Html  с формой
         public IActionResult Register() => View(new RegisterUserViewModel());
         //принятие формы обратно
@@ -38,9 +39,36 @@ namespace WebStore.Controllers
                 return RedirectToAction("Index", "Home");
             }
             foreach (var error in registration_result.Errors)
-                ModelState.AddModelError("",error.Description);
+                ModelState.AddModelError("", error.Description);
 
             return View(Model);
         }
+        #endregion
+        #region Login
+        public IActionResult Login(string ReturnUrl) => View(new LoginViewModel { ReturnUrl = ReturnUrl });
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel Model)
+        {
+            if (!ModelState.IsValid) return View(Model);
+            var login_result = await _SignInManager.PasswordSignInAsync(
+                Model.UserName,
+                Model.Password,
+                Model.RememberMe,
+#if DEBUG
+                false
+#else
+                true
+#endif
+                );
+            if (login_result.Succeeded)
+            {
+                return LocalRedirect(Model.ReturnUrl ?? "/");
+            }
+            ModelState.AddModelError("", "Inalid username or password!");
+            return View(Model);
+
+        }
+        #endregion
     }
 }
