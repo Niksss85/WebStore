@@ -78,6 +78,7 @@ namespace WebStore.Controllers
         public IActionResult AccessDenied(string ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
+            return View();
         }
 
 
