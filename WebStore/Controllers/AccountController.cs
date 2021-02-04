@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,13 @@ namespace WebStore.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<User> _UserManager;
+        private readonly ILogger<AccountController> _Logger;
         private readonly SignInManager<User> _SignInManager;
 
-        public AccountController(UserManager<User> UserManger, SignInManager<User> SignInManager)
+        public AccountController(UserManager<User> UserManger, SignInManager<User> SignInManager, ILogger<AccountController> Logger)
         {
             _UserManager = UserManger;
+            _Logger = Logger;
             _SignInManager = SignInManager;
         }
         #region Register
@@ -27,6 +30,7 @@ namespace WebStore.Controllers
         public async Task<IActionResult> Register(RegisterUserViewModel Model)
         {
             if (!ModelState.IsValid) return View(Model);
+            _Logger.LogInformation("Registration of user {0}", Model.UserName);
             var user = new User
             {
                 UserName = Model.UserName,
@@ -34,10 +38,15 @@ namespace WebStore.Controllers
             var registration_result = await _UserManager.CreateAsync(user, Model.Password);
             if (registration_result.Succeeded)
             {
+                _Logger.LogInformation("User {0} successfully registred", Model.UserName);
                 await _SignInManager.SignInAsync(user, false);
 
                 return RedirectToAction("Index", "Home");
             }
+
+            _Logger.LogWarning("Problems in registration of user {0}, errors: {1}", Model.UserName,
+                string.Join(',', registration_result.Errors.Select(e=>e.Description)));
+
             foreach (var error in registration_result.Errors)
                 ModelState.AddModelError("", error.Description);
 
@@ -80,7 +89,6 @@ namespace WebStore.Controllers
             ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
-
 
     }
 }
