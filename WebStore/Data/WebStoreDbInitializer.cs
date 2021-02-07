@@ -130,7 +130,7 @@ namespace WebStore.Data
                 }
             }
 
-            await CheckRole(Role.Administrtator);
+            await CheckRole(Role.Administrator);
             await CheckRole(Role.Users);
 
             if (await _UserManager.FindByNameAsync(User.Administrtator) is null)
@@ -144,7 +144,7 @@ namespace WebStore.Data
                 if (creation_result.Succeeded)
                 {
                     _Logger.LogInformation("Пользователь администратор создан успешно");
-                    await _UserManager.AddToRoleAsync(admin, Role.Administrtator);
+                    await _UserManager.AddToRoleAsync(admin, Role.Administrator);
                     _Logger.LogInformation("Пользователь администратор наделен ролью администратора");
                 }
                 else
