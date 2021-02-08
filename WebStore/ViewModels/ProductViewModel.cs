@@ -1,4 +1,5 @@
-﻿namespace WebStore.ViewModels
+﻿
+namespace WebStore.ViewModels
 {
     public record ProductViewModel
     {
@@ -9,5 +10,7 @@
         public string ImageUrl { get; init; }
 
         public decimal Price { get; init; }
+
+        public string Brand { get; set; }
     }
 }
