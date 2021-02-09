@@ -23,9 +23,9 @@ namespace WebStore.Models.InCookies
             get
             {
                 var context = _HttpContextAccessor.HttpContext;
-                var cookies = context.Response.Cookies;
+                var cookies = context!.Response.Cookies;
                 var cart_cookies = context.Request.Cookies[_CartName];
-                if(cart_cookies is null)
+                if (cart_cookies is null)
                 {
                     var cart = new Cart();
                     cookies.Append(_CartName, JsonConvert.SerializeObject(cart));
@@ -46,7 +46,7 @@ namespace WebStore.Models.InCookies
         {
             _HttpContextAccessor = HttpContextAccessor;
             _ProductData = productData;
-            var user = HttpContextAccessor.HttpContext.User;
+            var user = HttpContextAccessor.HttpContext!.User;
             var user_name = user.Identity!.IsAuthenticated ? $"-{user.Identity.Name}" : null;
 
             _CartName = $"WebStore.Cart{user_name}";
@@ -80,15 +80,13 @@ namespace WebStore.Models.InCookies
             var cart = Cart;
             var item = cart.Items.FirstOrDefault(i => i.ProductId == id);
 
-            if (item is null)
-            {
-                return;
-            }
-            else
-            {
-                if(item.Quantity>0) item.Quantity--;
-                if (item.Quantity == 0) Cart.Items.Remove(item);
-            }
+            if (item is null) return;
+
+            if (item.Quantity > 0)
+                item.Quantity--;
+            if (item.Quantity == 0)
+               cart.Items.Remove(item);
+
             Cart = cart;
 
         }
@@ -100,7 +98,7 @@ namespace WebStore.Models.InCookies
                 ids = Cart.Items.Select(item => item.ProductId).ToArray()
             });
 
-            var product_view_models = products.ToView().ToDictionary(p=>p.Id);
+            var product_view_models = products.ToView().ToDictionary(p => p.Id);
             return new CartViewModel
             {
                 Items = Cart.Items
@@ -120,7 +118,7 @@ namespace WebStore.Models.InCookies
             }
             else
             {
-                Cart.Items.Remove(item);
+                cart.Items.Remove(item);
             }
             Cart = cart;
         }
