@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,6 +11,7 @@ using WebStore.ViewModels;
 
 namespace WebStore.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<User> _UserManager;
@@ -24,8 +26,10 @@ namespace WebStore.Controllers
         }
         #region Register
         //отправка Html  с формой
+        [AllowAnonymous]
         public IActionResult Register() => View(new RegisterUserViewModel());
         //принятие формы обратно
+        [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterUserViewModel Model)
         {
@@ -39,6 +43,10 @@ namespace WebStore.Controllers
             if (registration_result.Succeeded)
             {
                 _Logger.LogInformation("User {0} successfully registred", Model.UserName);
+
+                await _UserManager.AddToRoleAsync(user, Role.Users);
+                _Logger.LogInformation("User {0} get role User", Model.UserName);
+
                 await _SignInManager.SignInAsync(user, false);
 
                 return RedirectToAction("Index", "Home");
@@ -54,9 +62,11 @@ namespace WebStore.Controllers
         }
         #endregion
         #region Login
+        [AllowAnonymous]
         public IActionResult Login(string ReturnUrl) => View(new LoginViewModel { ReturnUrl = ReturnUrl });
-
-        [HttpPost, ValidateAntiForgeryToken]
+       
+        [AllowAnonymous]
+        [HttpPost, ValidateAntiForgeryToken] 
         public async Task<IActionResult> Login(LoginViewModel Model)
         {
             if (!ModelState.IsValid) return View(Model);
