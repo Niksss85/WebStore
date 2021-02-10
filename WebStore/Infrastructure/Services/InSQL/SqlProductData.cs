@@ -10,7 +10,7 @@ using WebStoreDAL.Context;
 
 namespace WebStore.Infrastructure.Services.InSQL
 {
-    public class SqlProductData:IProductData
+    public class SqlProductData : IProductData
     {
         private readonly WebStoreDB _db;
 
@@ -23,7 +23,9 @@ namespace WebStore.Infrastructure.Services.InSQL
         public IEnumerable<Section> GetSections() => _db.Sections.Include(s => s.Products);
         public IEnumerable<Product> GetProducts(ProductFilter Filter = null)
         {
-            IQueryable<Product> query = _db.Products;
+            IQueryable<Product> query = _db.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Section);
 
             if (Filter?.ids?.Length > 0)
             {
