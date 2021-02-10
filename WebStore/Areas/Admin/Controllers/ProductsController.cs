@@ -22,5 +22,14 @@ namespace WebStore.Areas.Admin.Controllers
         {
             return View(_ProductData.GetProducts());
         }
+        public IActionResult Edit(int id) =>
+             _ProductData.GetProductById(id) is { } product
+            ? View(product)
+            : NotFound();
+        
+        public IActionResult Delete(int id)=>
+            _ProductData.GetProductById(id) is { } product
+           ? View(product)
+           : NotFound();
     }
 }
