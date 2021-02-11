@@ -10,7 +10,7 @@ using WebStoreDAL.Context;
 namespace WebStoreDAL.Migrations
 {
     [DbContext(typeof(WebStoreDB))]
-    [Migration("20210211072327_Orders")]
+    [Migration("20210211091405_Orders")]
     partial class Orders
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -305,7 +305,7 @@ namespace WebStoreDAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
