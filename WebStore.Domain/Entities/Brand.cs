@@ -10,7 +10,7 @@ namespace WebStore.Domain.Entities
        // [Table("Brands")]
        // [Column("BrandOrder")]
         public int Order { get; set; }
-        public ICollection<Product> Products { get; set; }// - устанавливаем связь между таблицами 
+        public virtual ICollection<Product> Products { get; set; }// - устанавливаем связь между таблицами 
 
     }
 }

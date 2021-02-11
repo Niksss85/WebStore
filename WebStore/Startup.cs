@@ -25,7 +25,10 @@ namespace WebStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<WebStoreDB>(opt =>
+            opt.UseSqlServer(Configuration.GetConnectionString("Default"))
+            .UseLazyLoadingProxies());
+           
             services.AddTransient<WebStoreDbInitializer>();
 
             services.AddIdentity<User, Role>()
@@ -67,6 +70,7 @@ namespace WebStore
             //services.AddTransient<IProductData, InMemoryProductData>();
             services.AddTransient<IProductData, SqlProductData>();
             services.AddTransient<ICartService, InCookiesCartService>();
+            services.AddTransient<IOrderService, SqlOrderService>();
 
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             services
@@ -104,6 +108,10 @@ namespace WebStore
                 {
                     await context.Response.WriteAsync(Configuration["Greetings"]);
                 });
+                endpoints.MapControllerRoute(
+                      name: "areas",
+                      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
 
                 endpoints.MapControllerRoute(
                     "default",
