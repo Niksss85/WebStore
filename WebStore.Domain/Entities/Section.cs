@@ -13,6 +13,6 @@ namespace WebStore.Domain.Entities
         public int? ParentId { get; set; }
         [ForeignKey(nameof(ParentId))]
         public virtual Section Parent { get; set; }//свойство зависимости
-        public virtual ICollection<Product> Products { get; set; }// - устанавливаем связь между таблицами 
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();// - устанавливаем связь между таблицами 
     }
 }
